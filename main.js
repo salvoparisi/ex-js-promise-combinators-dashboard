@@ -1,13 +1,13 @@
 async function fetchUrl(url) {
     const res = await fetch(url)
-    const obj = res.json()
+    const obj = await res.json()
     return obj
 }
 
 async function getDestination(query) {
     const [city] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`)
     const cityObj = {
-        name: city.name,
+        city: city.name,
         country: city.country
     }
     return cityObj
@@ -35,13 +35,21 @@ async function getDashboardData(query) {
     const destinations = getDestination(query)
     const weathers = getWeathers(query)
     const airports = getAirports(query)
-    Promise.all([destinations, weathers, airports])
+    await Promise.all([destinations, weathers, airports])
         .then(result => {
             obj = { ...result[0], ...result[1], ...result[2] }
-            console.log(obj);
-
         })
-
+    return obj
 }
 
-getDashboardData("Paris")
+(async () => {
+    getDashboardData('london')
+        .then(obj => {
+            console.log(`${obj.city} is in ${obj.country}.\n` +
+                `Todey there are ${obj.temperature} degrees and weather is ${obj.weather}.\n` +
+                `The main airport is ${obj.airport}`
+            )
+        })
+        .catch(error => console.error(error))
+})()
+
