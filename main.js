@@ -5,29 +5,41 @@ async function fetchUrl(url) {
 }
 
 async function getDestination(query) {
-    const [city] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`)
-    const cityObj = {
-        city: city.name,
-        country: city.country
+    try {
+        const [city] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/destinations?search=${query}`)
+        const cityObj = {
+            city: city.name,
+            country: city.country
+        }
+        return cityObj
+    } catch (error) {
+        throw new Error('Non Posso recuperare la Destinazione')
     }
-    return cityObj
 }
 
 async function getWeathers(query) {
-    const [weather] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`)
-    const weatherObj = {
-        temperature: weather.temperature,
-        weather: weather.weather_description
+    try {
+        const [weather] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/weathers?search=${query}`)
+        const weatherObj = {
+            temperature: weather.temperature,
+            weather: weather.weather_description
+        }
+        return weatherObj
+    } catch (error) {
+        throw new Error('Non posso recuperare il Meteo')
     }
-    return weatherObj
 }
 
 async function getAirports(query) {
-    const [airport] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`)
-    const airportObj = {
-        airport: airport.name
+    try {
+        const [airport] = await fetchUrl(`https://boolean-spec-frontend.vercel.app/freetestapi/airports?search=${query}`)
+        const airportObj = {
+            airport: airport.name
+        }
+        return airportObj
+    } catch (error) {
+        throw new Error('Non posso recuperare gli Aereoporti')
     }
-    return airportObj
 }
 
 async function getDashboardData(query) {
@@ -39,6 +51,7 @@ async function getDashboardData(query) {
         .then(result => {
             obj = { ...result[0], ...result[1], ...result[2] }
         })
+        .catch(error => console.error(error))
     return obj
 }
 
